@@ -16,3 +16,6 @@
 
 # Built binary
 /dummy
+
+# GitHub Super-Linter log
+/super-linter.log
