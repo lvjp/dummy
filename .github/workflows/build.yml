@@ -16,6 +16,16 @@ jobs:
         with:
           version: v1.50.1
 
+  super-linter:
+    name: Run GitHub super-linter
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3.1.0
+      - uses: github/super-linter@v4.9.7
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   go-test:
     name: Run tests
     runs-on: ubuntu-22.04
