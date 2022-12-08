@@ -11,9 +11,6 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "dummy",
 	Short: "A simple dummy app",
-	Run: func(cmd *cobra.Command, args []string) {
-		slog.Info("dummy !!!")
-	},
 }
 
 // version variable is here to be modified at compile time.
