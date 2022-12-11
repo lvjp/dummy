@@ -2,13 +2,19 @@ package cmd
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"io"
+	"net"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/slog"
+	"golang.org/x/sync/errgroup"
 )
 
 // authCmd represents the auth command
@@ -22,6 +28,9 @@ var authServeCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Run the authentication server",
 	Run: func(cmd *cobra.Command, args []string) {
+		mainCtx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+		defer stop()
+
 		mux := http.NewServeMux()
 		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 			data := bytes.NewBufferString("Hello from the dummy authentication server")
@@ -44,14 +53,39 @@ var authServeCmd = &cobra.Command{
 			Handler:      mux,
 			ReadTimeout:  10 * time.Second,
 			WriteTimeout: 10 * time.Second,
+			BaseContext: func(_ net.Listener) context.Context {
+				return mainCtx
+			},
 		}
 
-		if err := s.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			slog.Error("Cannot listen and serve", err)
+		g, gCtx := errgroup.WithContext(mainCtx)
+		g.Go(func() error {
+			logger := slog.With(slog.String("module", "authserver"))
+
+			logger.Info("Start HTTP server")
+
+			if err := s.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+				slog.Error("Cannot server listen and serve", err)
+				return err
+			}
+
+			slog.Info("HTTP server gracefully shutdown")
+			return nil
+		})
+
+		g.Go(func() error {
+			<-gCtx.Done()
+
+			slog.Info("Shutdown sequence started")
+			return s.Shutdown(context.Background())
+		})
+
+		if err := g.Wait(); err != nil {
+			slog.Error("Unexpected error on shutdown", err)
 			return
 		}
 
-		slog.Info("Server gracefully shutdowned")
+		slog.Info("Shutdown sequence finished")
 	},
 }
 
