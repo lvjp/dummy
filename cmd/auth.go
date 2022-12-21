@@ -33,6 +33,16 @@ var authServeCmd = &cobra.Command{
 
 		mux := http.NewServeMux()
 		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			slog.Info("Incoming request",
+				slog.Time("time", time.Now()),
+				slog.String("host", r.Host),
+				slog.String("remote", r.RemoteAddr),
+				slog.String("proto", r.Proto),
+				slog.String("URI", r.RequestURI),
+				slog.String("Referer", r.Header.Get("Referer")),
+				slog.String("User-Agent", r.Header.Get("User-Agent")),
+			)
+
 			data := bytes.NewBufferString("Hello from the dummy authentication server")
 			length := data.Len()
 
