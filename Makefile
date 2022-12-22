@@ -5,7 +5,10 @@ pipeline: lint build
 build:
 	bazel build //:dummy
 
-lint: golangci-lint super-linter
+lint: buildifier golangci-lint super-linter
+
+buildifier:
+	bazel run //:buildifier
 
 golangci-lint:
 	golangci-lint run

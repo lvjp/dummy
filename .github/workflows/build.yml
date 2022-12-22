@@ -16,6 +16,7 @@ jobs:
             --stamp \
             --workspace_status_command=./build/bazel/status.sh \
             //:dummy
+      - run: bazel run //:buildifier
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3.3.1
         with:
