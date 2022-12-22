@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cmd",
+    srcs = [
+        "auth.go",
+        "root.go",
+    ],
+    importpath = "github.com/lvjp/dummy/cmd",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_spf13_cobra//:cobra",
+        "@org_golang_x_exp//slog",
+        "@org_golang_x_sync//errgroup",
+    ],
+)

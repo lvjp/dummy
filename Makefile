@@ -3,8 +3,7 @@ all: build
 pipeline: lint build
 
 build:
-	go build -v
-	go test ./...
+	bazel build //:dummy
 
 lint: golangci-lint super-linter
 

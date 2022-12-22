@@ -19,3 +19,6 @@
 
 # GitHub Super-Linter log
 /super-linter.log
+
+# Ignore all bazel-* symlinks.
+/bazel-*
