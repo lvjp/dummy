@@ -11,8 +11,11 @@ jobs:
       - uses: actions/setup-go@v3.5.0
         with:
           go-version: "1.19.4"
-      - run: go build -v -ldflags="-X 'github.com/lvjp/dummy/cmd.version=${{ github.sha }}'"
-      - run: go test ./...
+      - run: |
+          bazel build \
+            --stamp \
+            --workspace_status_command=./build/bazel/status.sh \
+            //:dummy
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v3.3.1
         with:

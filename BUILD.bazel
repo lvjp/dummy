@@ -30,4 +30,7 @@ go_binary(
     name = "dummy",
     embed = [":dummy_lib"],
     visibility = ["//visibility:public"],
+    x_defs = {
+        "github.com/lvjp/dummy/cmd.version": "{STABLE_GIT_COMMIT}",
+    },
 )
