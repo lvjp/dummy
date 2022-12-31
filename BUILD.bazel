@@ -1,6 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 load("@bazel_gazelle//:def.bzl", "gazelle")
 load("@com_github_bazelbuild_buildtools//buildifier:def.bzl", "buildifier")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image")
 
 # gazelle:prefix github.com/lvjp/dummy
 gazelle(name = "gazelle")
@@ -36,4 +37,12 @@ go_binary(
     x_defs = {
         "github.com/lvjp/dummy/cmd.version": "{STABLE_GIT_COMMIT}",
     },
+)
+
+container_image(
+    name = "image",
+    base = "@ubuntu_base//image",
+    cmd = [],
+    entrypoint = ["/dummy"],
+    files = [":dummy"],
 )
