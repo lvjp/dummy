@@ -39,6 +39,7 @@ super-linter:
 		--env RUN_LOCAL=true \
 		--env DEFAULT_WORKSPACE=/work \
 		--env VALIDATE_GO=false \
+		--env FILTER_REGEX_EXCLUDE=".*/deployments/helm/.*" \
 		github/super-linter:v4.10.0 bash
 
 .PHONY: all build golangci-lint lint pipeline super-linter
