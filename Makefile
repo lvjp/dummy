@@ -15,6 +15,9 @@ build:
 	bazel build //...
 	bazel run //:image
 
+helm: build
+	helm upgrade dummy ./deployments/helm
+
 lint: buildifier golangci-lint super-linter
 
 gazelle: build
