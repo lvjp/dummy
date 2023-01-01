@@ -18,7 +18,7 @@ build:
 helm: build
 	helm upgrade dummy ./deployments/helm
 
-lint: buildifier golangci-lint super-linter
+lint: helm-lint buildifier golangci-lint super-linter
 
 gazelle: build
 	bazel run //:gazelle
@@ -32,6 +32,9 @@ buildifier: build
 golangci-lint:
 	golangci-lint run
 
+helm-lint:
+	helm lint ./deployments/helm
+
 super-linter:
 	docker run \
 		--rm \
@@ -42,4 +45,4 @@ super-linter:
 		--env FILTER_REGEX_EXCLUDE=".*/deployments/helm/.*" \
 		github/super-linter:v4.10.0 bash
 
-.PHONY: all build golangci-lint lint pipeline super-linter
+.PHONY: all build buildifier gazelle-update-repos gazelle golangci-lint helm-lint helm lint pipeline run super-linter
