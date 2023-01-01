@@ -2,8 +2,18 @@ all: build
 
 pipeline: lint build
 
+run: build
+	docker run \
+		--rm \
+		--tty \
+		--interactive \
+		--name dummy \
+		--publish 8080:8080 \
+		bazel:image auth serve
+
 build:
 	bazel build //...
+	bazel run //:image
 
 lint: buildifier golangci-lint super-linter
 
