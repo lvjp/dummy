@@ -12,10 +12,7 @@ jobs:
         with:
           go-version: "1.19.5"
       - run: |
-          bazel build \
-            --stamp \
-            --workspace_status_command=./build/bazel/status.sh \
-            //...
+          bazel build //...
           bazel run //:image
       - run: bazel run //:buildifier
       - name: golangci-lint

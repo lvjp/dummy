@@ -1,3 +1,7 @@
 # Show us information about failures.
 build --verbose_failures
 test --test_output=errors
+
+# Enable stamping
+build --stamp --workspace_status_command=./build/bazel/status.sh
+run --stamp --workspace_status_command=./build/bazel/status.sh
