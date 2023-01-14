@@ -45,4 +45,5 @@ container_image(
     cmd = [],
     entrypoint = ["/dummy"],
     files = [":dummy"],
+    repository = "rg.fr-par.scw.cloud/dummy",
 )
