@@ -38,8 +38,8 @@ super-linter:
 	docker run \
 		--rm \
 		--volume "$(shell pwd):/work:z" \
-		--env RUN_LOCAL=true \
 		--env DEFAULT_WORKSPACE=/work \
+		--env RUN_LOCAL=true \
 		--env VALIDATE_GO=false \
 		github/super-linter:v4.10.0 bash
 
