@@ -1,0 +1,20 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "timezone": "Europe/Paris",
+  "packageRules": [
+    {
+      "matchPackagePrefixes": [
+        "golang.org/x"
+      ],
+      "schedule": [
+        "every month"
+      ]
+    }
+  ],
+  "postUpdateOptions": [
+    "gomodTidy"
+  ]
+}
