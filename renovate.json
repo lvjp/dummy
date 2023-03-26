@@ -5,6 +5,10 @@
     ":disableDependencyDashboard"
   ],
   "timezone": "Europe/Paris",
+  "labels": [
+    "dependencies",
+    "renovate"
+  ],
   "packageRules": [
     {
       "matchPackagePrefixes": [
