@@ -52,8 +52,8 @@ def go_dependencies():
     go_repository(
         name = "org_golang_x_exp",
         importpath = "golang.org/x/exp",
-        sum = "h1:lTjJJUAuWTLRn0pXoNLiVZIFYOIpvmg3MxmZxgO09bM=",
-        version = "v0.0.0-20221208044002-44028be4359e",
+        sum = "h1:ooxPy7fPvB4kwsA2h+iBNHkAbp/4JxTSwCmvdjEYmug=",
+        version = "v0.0.0-20230321023759-10a507213a29",
     )
     go_repository(
         name = "org_golang_x_mod",
