@@ -22,13 +22,13 @@ build:
 
 lint: buildifier golangci-lint super-linter
 
-gazelle: build
+gazelle:
 	bazel run //:gazelle
 
-gazelle-update-repos: build
+gazelle-update-repos:
 	bazel run //:gazelle-update-repos
 
-buildifier: build
+buildifier:
 	bazel run //:buildifier
 
 golangci-lint:
