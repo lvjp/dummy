@@ -8,6 +8,13 @@ def go_dependencies():
         version = "v2.0.2",
     )
     go_repository(
+        name = "com_github_davecgh_go_spew",
+        importpath = "github.com/davecgh/go-spew",
+        sum = "h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=",
+        version = "v1.1.1",
+    )
+
+    go_repository(
         name = "com_github_google_go_cmp",
         importpath = "github.com/google/go-cmp",
         sum = "h1:e6P7q2lk1O+qJJb4BtCQXlK8vWEO8V1ZeuEdJNOqZyg=",
@@ -20,11 +27,37 @@ def go_dependencies():
         version = "v1.0.1",
     )
     go_repository(
+        name = "com_github_kr_pretty",
+        importpath = "github.com/kr/pretty",
+        sum = "h1:WgNl7dwNpEZ6jJ9k1snq4pZsg7DOEN8hP9Xw0Tsjwk0=",
+        version = "v0.3.0",
+    )
+    go_repository(
+        name = "com_github_pmezard_go_difflib",
+        importpath = "github.com/pmezard/go-difflib",
+        sum = "h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=",
+        version = "v1.0.0",
+    )
+    go_repository(
+        name = "com_github_rogpeppe_go_internal",
+        importpath = "github.com/rogpeppe/go-internal",
+        sum = "h1:73kH8U+JUqXU8lRuOHeVHaa/SZPifC7BkcraZVejAe8=",
+        version = "v1.9.0",
+    )
+
+    go_repository(
         name = "com_github_russross_blackfriday_v2",
         importpath = "github.com/russross/blackfriday/v2",
         sum = "h1:JIOH55/0cWyOuilr9/qlrm0BSXldqnqwMsf35Ld67mk=",
         version = "v2.1.0",
     )
+    go_repository(
+        name = "com_github_sourcegraph_conc",
+        importpath = "github.com/sourcegraph/conc",
+        sum = "h1:OQTbbt6P72L20UqAkXXuLOj79LfEanQ+YQFNpLA9ySo=",
+        version = "v0.3.0",
+    )
+
     go_repository(
         name = "com_github_spf13_cobra",
         importpath = "github.com/spf13/cobra",
@@ -38,10 +71,17 @@ def go_dependencies():
         version = "v1.0.5",
     )
     go_repository(
+        name = "com_github_stretchr_testify",
+        importpath = "github.com/stretchr/testify",
+        sum = "h1:w7B6lhMri9wdJUVmEZPGGhZzrYTPvgJArz7wNPgYKsk=",
+        version = "v1.8.1",
+    )
+
+    go_repository(
         name = "in_gopkg_check_v1",
         importpath = "gopkg.in/check.v1",
-        sum = "h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=",
-        version = "v0.0.0-20161208181325-20d25e280405",
+        sum = "h1:YR8cESwS4TdDjEe65xsg0ogRM/Nc3DYOhEAlW+xobZo=",
+        version = "v1.0.0-20190902080502-41f04d3bba15",
     )
     go_repository(
         name = "in_gopkg_yaml_v3",
@@ -78,4 +118,16 @@ def go_dependencies():
         importpath = "golang.org/x/tools",
         sum = "h1:G6AHpWxTMGY1KyEYoAQ5WTtIekUUvDNjan3ugu60JvE=",
         version = "v0.2.0",
+    )
+    go_repository(
+        name = "org_uber_go_atomic",
+        importpath = "go.uber.org/atomic",
+        sum = "h1:ADUqmZGgLDDfbSL9ZmPxKTybcoEYHgpYfELNoN+7hsw=",
+        version = "v1.7.0",
+    )
+    go_repository(
+        name = "org_uber_go_multierr",
+        importpath = "go.uber.org/multierr",
+        sum = "h1:7fIwc/ZtS0q++VgcfqFDxSBZVv/Xo49/SYnDFupUwlI=",
+        version = "v1.9.0",
     )

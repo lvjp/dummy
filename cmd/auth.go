@@ -12,9 +12,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/sourcegraph/conc/pool"
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/slog"
-	"golang.org/x/sync/errgroup"
 )
 
 // authCmd represents the auth command
@@ -68,8 +68,12 @@ var authServeCmd = &cobra.Command{
 			},
 		}
 
-		g, gCtx := errgroup.WithContext(mainCtx)
-		g.Go(func() error {
+		p := pool.New().WithErrors().WithContext(mainCtx)
+		p.Go(func(ctx context.Context) error {
+			s.BaseContext = func(l net.Listener) context.Context {
+				return ctx
+			}
+
 			logger := slog.With(slog.String("module", "authserver"))
 
 			logger.Info("Start HTTP server")
@@ -83,14 +87,14 @@ var authServeCmd = &cobra.Command{
 			return nil
 		})
 
-		g.Go(func() error {
-			<-gCtx.Done()
+		p.Go(func(ctx context.Context) error {
+			<-ctx.Done()
 
 			slog.Info("Shutdown sequence started")
 			return s.Shutdown(context.Background())
 		})
 
-		if err := g.Wait(); err != nil {
+		if err := p.Wait(); err != nil {
 			slog.Error("Unexpected error on shutdown", err)
 			return
 		}
