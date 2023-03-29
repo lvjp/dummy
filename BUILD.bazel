@@ -25,7 +25,7 @@ go_library(
     importpath = "github.com/lvjp/dummy",
     visibility = ["//visibility:private"],
     deps = [
-        "//cmd",
+        "@com_github_sourcegraph_conc//pool",
         "@org_golang_x_exp//slog",
     ],
 )
