@@ -42,8 +42,11 @@ go_binary(
 container_image(
     name = "image",
     base = "@ubuntu_base//image",
-    cmd = [],
+    cmd = [
+        "auth",
+        "serve",
+    ],
     entrypoint = ["/dummy"],
     files = [":dummy"],
-    repository = "rg.fr-par.scw.cloud/dummy",
+    repository = "rg.fr-par.scw.cloud/funcscwdummyufo53dla/dummy",
 )

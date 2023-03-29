@@ -58,8 +58,14 @@ var authServeCmd = &cobra.Command{
 			}
 		})
 
+		// PORT is definied by Scaleway serverless containers
+		port := os.Getenv("PORT")
+		if port == "" {
+			port = "8080"
+		}
+
 		s := &http.Server{
-			Addr:         ":8080",
+			Addr:         ":" + port,
 			Handler:      mux,
 			ReadTimeout:  10 * time.Second,
 			WriteTimeout: 10 * time.Second,
@@ -76,7 +82,7 @@ var authServeCmd = &cobra.Command{
 
 			logger := slog.With(slog.String("module", "authserver"))
 
-			logger.Info("Start HTTP server")
+			logger.With("port", port).Info("Start HTTP server")
 
 			if err := s.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 				slog.Error("Cannot server listen and serve", err)

@@ -14,7 +14,7 @@ run: build
 		--interactive \
 		--name dummy \
 		--publish 8080:8080 \
-		"sha256:$${IMAGE_ID}" auth serve
+		"sha256:$${IMAGE_ID}"
 
 build:
 	bazel build //...
