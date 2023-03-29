@@ -20,6 +20,9 @@ build:
 	bazel build //...
 	bazel run //:image
 
+push: build
+	bazel run //:push
+
 lint: buildifier golangci-lint super-linter
 
 gazelle:
