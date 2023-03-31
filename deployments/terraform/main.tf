@@ -1,3 +1,11 @@
+resource "scaleway_cockpit" "dummy" {
+}
+
+resource "scaleway_cockpit_grafana_user" "dummy" {
+  login = "dummy"
+  role  = "viewer"
+}
+
 resource "scaleway_container_namespace" "dummy" {
   name = "dummy"
 
