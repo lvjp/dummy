@@ -8,6 +8,9 @@ import (
 // ErrEmpty is returned when an input string is empty.
 var ErrEmpty = errors.New("empty string")
 
+// ServiceMiddleware is a chainable behavior modifier for StringService.
+type ServiceMiddleware func(StringService) StringService
+
 // StringService provides operations on strings.
 type StringService interface {
 	Uppercase(string) (string, error)

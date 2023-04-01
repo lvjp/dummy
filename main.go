@@ -59,6 +59,7 @@ func newServer() *http.Server {
 	mux := http.NewServeMux()
 
 	svc := stringsvc.NewStringService()
+	svc = stringsvc.LoggingMiddleware(slog.Default())(svc)
 
 	mux.Handle("/string/uppercase", stringsvc.NewUppercaseHandler(svc))
 	mux.Handle("/string/count", stringsvc.NewCountHandler(svc))
