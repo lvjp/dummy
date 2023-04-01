@@ -21,5 +21,5 @@ resource "scaleway_container" "dummy" {
   memory_limit = 128
   timeout      = 30
 
-  registry_image = "${scaleway_container_namespace.dummy.registry_endpoint}/dummy:latest"
+  registry_image = "${scaleway_container_namespace.dummy.registry_endpoint}/dummy:${var.image_tag}"
 }
