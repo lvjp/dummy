@@ -25,6 +25,7 @@ go_library(
     importpath = "github.com/lvjp/dummy",
     visibility = ["//visibility:private"],
     deps = [
+        "//internal/pkg/service/string",
         "@com_github_sourcegraph_conc//pool",
         "@org_golang_x_exp//slog",
     ],
@@ -42,10 +43,6 @@ go_binary(
 container_image(
     name = "image",
     base = "@ubuntu_base//image",
-    cmd = [
-        "auth",
-        "serve",
-    ],
     entrypoint = ["/dummy"],
     files = [":dummy"],
     repository = "rg.fr-par.scw.cloud/funcscwdummyufo53dla/dummy",

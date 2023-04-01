@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"errors"
-	"io"
 	"net"
 	"net/http"
 	"os"
@@ -12,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	stringsvc "github.com/lvjp/dummy/internal/pkg/service/string"
 	"github.com/sourcegraph/conc/pool"
 	"golang.org/x/exp/slog"
 )
@@ -30,9 +29,7 @@ func main() {
 			return ctx
 		}
 
-		logger := slog.With(slog.String("module", "authserver"))
-
-		logger.With("addr", s.Addr).Info("Start HTTP server")
+		slog.With("addr", s.Addr).Info("Start HTTP server")
 
 		if err := s.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			slog.Error("Cannot server listen and serve", err)
@@ -60,31 +57,11 @@ func main() {
 
 func newServer() *http.Server {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		slog.Info("Incoming request",
-			slog.Time("time", time.Now()),
-			slog.String("host", r.Host),
-			slog.String("remote", r.RemoteAddr),
-			slog.String("proto", r.Proto),
-			slog.String("URI", r.RequestURI),
-			slog.String("Referer", r.Header.Get("Referer")),
-			slog.String("User-Agent", r.Header.Get("User-Agent")),
-		)
 
-		data := bytes.NewBufferString("Hello from the dummy server")
-		length := data.Len()
+	svc := stringsvc.NewStringService()
 
-		w.Header().Set("Content-Type", "text/plain")
-		w.WriteHeader(http.StatusOK)
-
-		written, err := io.Copy(w, data)
-		if err != nil {
-			slog.Error("Cannot write HTTP response", err,
-				slog.Int64("written", written),
-				slog.Int("length", length),
-			)
-		}
-	})
+	mux.Handle("/string/uppercase", stringsvc.NewUppercaseHandler(svc))
+	mux.Handle("/string/count", stringsvc.NewCountHandler(svc))
 
 	// PORT is definied by Scaleway serverless containers
 	port := os.Getenv("PORT")

@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "string",
+    srcs = [
+        "handler.go",
+        "service.go",
+        "transport.go",
+    ],
+    importpath = "github.com/lvjp/dummy/internal/pkg/service/string",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "@com_github_go_kit_kit//endpoint",
+        "@com_github_go_kit_kit//transport/http",
+    ],
+)
