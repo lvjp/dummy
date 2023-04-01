@@ -26,6 +26,7 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//internal/pkg/service/string",
+        "//internal/pkg/service/version",
         "@com_github_sourcegraph_conc//pool",
         "@org_golang_x_exp//slog",
     ],

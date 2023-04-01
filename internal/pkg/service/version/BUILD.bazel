@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "version",
+    srcs = [
+        "handler.go",
+        "logging.go",
+        "service.go",
+        "transport.go",
+    ],
+    importpath = "github.com/lvjp/dummy/internal/pkg/service/version",
+    visibility = ["//:__subpackages__"],
+    x_defs = {"github.com/lvjp/dummy/internal/pkg/service/version.Version": "{STABLE_VERSION}"},
+    deps = [
+        "@com_github_go_kit_kit//endpoint",
+        "@com_github_go_kit_kit//transport/http",
+        "@org_golang_x_exp//slog",
+    ],
+)

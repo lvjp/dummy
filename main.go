@@ -11,6 +11,7 @@ import (
 	"time"
 
 	stringsvc "github.com/lvjp/dummy/internal/pkg/service/string"
+	versionsvc "github.com/lvjp/dummy/internal/pkg/service/version"
 	"github.com/sourcegraph/conc/pool"
 	"golang.org/x/exp/slog"
 )
@@ -58,11 +59,19 @@ func main() {
 func newServer() *http.Server {
 	mux := http.NewServeMux()
 
-	svc := stringsvc.NewStringService()
-	svc = stringsvc.LoggingMiddleware(slog.Default())(svc)
+	{
+		svc := stringsvc.NewStringService()
+		svc = stringsvc.LoggingMiddleware(slog.Default())(svc)
 
-	mux.Handle("/string/uppercase", stringsvc.NewUppercaseHandler(svc))
-	mux.Handle("/string/count", stringsvc.NewCountHandler(svc))
+		mux.Handle("/string/uppercase", stringsvc.NewUppercaseHandler(svc))
+		mux.Handle("/string/count", stringsvc.NewCountHandler(svc))
+	}
+
+	{
+		svc := versionsvc.NewVersionService()
+		svc = versionsvc.LoggingMiddleware(slog.Default())(svc)
+		mux.Handle("/version", versionsvc.NewVersionHandler(svc))
+	}
 
 	// PORT is definied by Scaleway serverless containers
 	port := os.Getenv("PORT")
