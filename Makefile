@@ -3,18 +3,13 @@ all: build
 pipeline: lint build
 
 run: build
-	@FILE=$$(bazel cquery //:image.json.sha256 \
-		--output starlark \
-		--starlark:expr="target.files.to_list()[0].path" \
-	); \
-	IMAGE_ID=$$(cat "$${FILE}"); \
 	docker run \
 		--rm \
 		--tty \
 		--interactive \
 		--name dummy \
 		--publish 8080:8080 \
-		"sha256:$${IMAGE_ID}"
+		"sha256:$(shell cat bazel-bin/image.json.sha256)"
 
 build:
 	bazel build //...

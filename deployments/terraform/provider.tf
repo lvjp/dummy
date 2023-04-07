@@ -9,5 +9,10 @@ terraform {
 }
 
 provider "scaleway" {
-  profile = "dummy"
+  profile = "github"
+
+  zone            = "fr-par-2"
+  region          = "fr-par"
+  organization_id = "15a4e529-d75e-498c-838d-1152527745fe"
+  project_id      = "41896ce7-3824-4868-ba1b-141f6c48c8e8"
 }

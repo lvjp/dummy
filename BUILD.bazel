@@ -46,14 +46,4 @@ container_image(
     base = "@ubuntu_base//image",
     entrypoint = ["/dummy"],
     files = [":dummy"],
-    repository = "rg.fr-par.scw.cloud/funcscwdummyufo53dla/dummy",
-)
-
-container_push(
-    name = "push",
-    format = "Docker",
-    image = ":image",
-    registry = "rg.fr-par.scw.cloud",
-    repository = "funcscwdummyufo53dla/dummy",
-    tag = "latest",
 )
