@@ -27,6 +27,9 @@ go_library(
     deps = [
         "//internal/pkg/service/string",
         "//internal/pkg/service/version",
+        "@com_github_go_kit_kit//metrics/prometheus",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_prometheus_client_golang//prometheus/promhttp",
         "@com_github_sourcegraph_conc//pool",
         "@org_golang_x_exp//slog",
     ],

@@ -4,6 +4,7 @@ go_library(
     name = "string",
     srcs = [
         "endpoint.go",
+        "instrumenting.go",
         "logging.go",
         "service.go",
         "transport.go",
@@ -12,6 +13,7 @@ go_library(
     visibility = ["//:__subpackages__"],
     deps = [
         "@com_github_go_kit_kit//endpoint",
+        "@com_github_go_kit_kit//metrics",
         "@com_github_go_kit_kit//transport/http",
         "@org_golang_x_exp//slog",
     ],

@@ -4,6 +4,7 @@ go_library(
     name = "version",
     srcs = [
         "endpoint.go",
+        "instrumenting.go",
         "logging.go",
         "service.go",
         "transport.go",
@@ -13,6 +14,7 @@ go_library(
     x_defs = {"github.com/lvjp/dummy/internal/pkg/service/version.Version": "{STABLE_VERSION}"},
     deps = [
         "@com_github_go_kit_kit//endpoint",
+        "@com_github_go_kit_kit//metrics",
         "@com_github_go_kit_kit//transport/http",
         "@org_golang_x_exp//slog",
     ],
