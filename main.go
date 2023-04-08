@@ -11,8 +11,8 @@ import (
 	"time"
 
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
+	debugsvc "github.com/lvjp/dummy/internal/pkg/service/debug"
 	stringsvc "github.com/lvjp/dummy/internal/pkg/service/string"
-	versionsvc "github.com/lvjp/dummy/internal/pkg/service/version"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sourcegraph/conc/pool"
@@ -65,7 +65,7 @@ func newServer() *http.Server {
 
 	{
 		svc := stringsvc.NewService()
-		svc = stringsvc.NewLoggingService(slog.Default(), svc)
+		svc = stringsvc.NewLoggingService(slog.Default().With("service", "string"), svc)
 		svc = stringsvc.NewInstrumentingService(
 			kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
 				Namespace: "api",
@@ -85,24 +85,24 @@ func newServer() *http.Server {
 	}
 
 	{
-		svc := versionsvc.NewService()
-		svc = versionsvc.NewLoggingservice(slog.Default(), svc)
-		svc = versionsvc.NewInstrumentingService(
+		svc := debugsvc.NewService()
+		svc = debugsvc.NewLoggingservice(slog.Default().With("service", "debug"), svc)
+		svc = debugsvc.NewInstrumentingService(
 			kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
 				Namespace: "api",
-				Subsystem: "version_service",
+				Subsystem: "debug_service",
 				Name:      "request_count",
 				Help:      "Number of requests received.",
 			}, fieldKeys),
 			kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
 				Namespace: "api",
-				Subsystem: "version_service",
+				Subsystem: "debug_service",
 				Name:      "request_latency_microseconds",
 				Help:      "Total duration of requests in microseconds.",
 			}, fieldKeys),
 			svc,
 		)
-		mux.Handle("/version/", http.StripPrefix("/version", versionsvc.MakeHandler(svc)))
+		mux.Handle("/debug/", http.StripPrefix("/debug", debugsvc.MakeHandler(svc)))
 	}
 
 	mux.Handle("/metrics", promhttp.Handler())

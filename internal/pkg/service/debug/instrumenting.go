@@ -1,4 +1,4 @@
-package version
+package debug
 
 import (
 	"time"
@@ -27,4 +27,22 @@ func (is *instrumentingService) Version() string {
 	}(time.Now())
 
 	return is.svc.Version()
+}
+
+func (is *instrumentingService) BuildTimestamp() string {
+	defer func(begin time.Time) {
+		is.requestCount.With("method", "buildtimestamp").Add(1)
+		is.requestLatency.With("method", "buildtimestamp").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return is.svc.BuildTimestamp()
+}
+
+func (is *instrumentingService) Environment() []string {
+	defer func(begin time.Time) {
+		is.requestCount.With("method", "environment").Add(1)
+		is.requestLatency.With("method", "environment").Observe(time.Since(begin).Seconds())
+	}(time.Now())
+
+	return is.svc.Environment()
 }

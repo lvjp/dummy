@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
-    name = "version",
+    name = "debug",
     srcs = [
         "endpoint.go",
         "instrumenting.go",
@@ -9,9 +9,12 @@ go_library(
         "service.go",
         "transport.go",
     ],
-    importpath = "github.com/lvjp/dummy/internal/pkg/service/version",
+    importpath = "github.com/lvjp/dummy/internal/pkg/service/debug",
     visibility = ["//:__subpackages__"],
-    x_defs = {"github.com/lvjp/dummy/internal/pkg/service/version.Version": "{STABLE_VERSION}"},
+    x_defs = {
+        "github.com/lvjp/dummy/internal/pkg/service/debug.Version": "{STABLE_VERSION}",
+        "github.com/lvjp/dummy/internal/pkg/service/debug.BuildTimestamp": "{BUILD_TIMESTAMP}",
+    },
     deps = [
         "@com_github_go_kit_kit//endpoint",
         "@com_github_go_kit_kit//metrics",

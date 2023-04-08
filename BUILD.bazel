@@ -25,8 +25,8 @@ go_library(
     importpath = "github.com/lvjp/dummy",
     visibility = ["//visibility:private"],
     deps = [
+        "//internal/pkg/service/debug",
         "//internal/pkg/service/string",
-        "//internal/pkg/service/version",
         "@com_github_go_kit_kit//metrics/prometheus",
         "@com_github_prometheus_client_golang//prometheus",
         "@com_github_prometheus_client_golang//prometheus/promhttp",
