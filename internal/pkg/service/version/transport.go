@@ -1,17 +1,20 @@
 package version
 
 import (
-	"context"
+	"net/http"
 
-	"github.com/go-kit/kit/endpoint"
+	kithttp "github.com/go-kit/kit/transport/http"
 )
 
-func makeVersionEndpoint(svc VersionService) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		return versionResponse{Version: svc.Version()}, nil
-	}
-}
+func MakeHandler(svc Service) http.Handler {
+	versionHandler := kithttp.NewServer(
+		makeVersionEndpoint(svc),
+		kithttp.NopRequestDecoder,
+		kithttp.EncodeJSONResponse,
+	)
 
-type versionResponse struct {
-	Version string
+	m := http.NewServeMux()
+	m.Handle("/version", versionHandler)
+
+	return m
 }

@@ -6,15 +6,13 @@ import (
 	"golang.org/x/exp/slog"
 )
 
-func LoggingMiddleware(logger *slog.Logger) ServiceMiddleware {
-	return func(next VersionService) VersionService {
-		return loggingMiddleware{logger, next}
-	}
-}
-
 type loggingMiddleware struct {
 	logger *slog.Logger
-	VersionService
+	svc    Service
+}
+
+func NewLoggingservice(logger *slog.Logger, s Service) Service {
+	return loggingMiddleware{logger, s}
 }
 
 func (lm loggingMiddleware) Version() (output string) {
@@ -26,6 +24,5 @@ func (lm loggingMiddleware) Version() (output string) {
 		)
 	}(time.Now())
 
-	output = lm.VersionService.Version()
-	return
+	return lm.svc.Version()
 }

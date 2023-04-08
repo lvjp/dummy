@@ -9,27 +9,27 @@ import (
 var ErrEmpty = errors.New("empty string")
 
 // ServiceMiddleware is a chainable behavior modifier for StringService.
-type ServiceMiddleware func(StringService) StringService
+//type Middleware func(Service) Service
 
 // StringService provides operations on strings.
-type StringService interface {
+type Service interface {
 	Uppercase(string) (string, error)
 	Count(string) int
 }
 
-func NewStringService() StringService {
-	return stringService{}
+func NewService() Service {
+	return serviceImpl{}
 }
 
-type stringService struct{}
+type serviceImpl struct{}
 
-func (stringService) Uppercase(s string) (string, error) {
+func (serviceImpl) Uppercase(s string) (string, error) {
 	if s == "" {
 		return "", ErrEmpty
 	}
 	return strings.ToUpper(s), nil
 }
 
-func (stringService) Count(s string) int {
+func (serviceImpl) Count(s string) int {
 	return len(s)
 }

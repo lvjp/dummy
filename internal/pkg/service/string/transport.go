@@ -5,61 +5,33 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/go-kit/kit/endpoint"
+	pouetkithttp "github.com/go-kit/kit/transport/http"
 )
 
-func makeUppercaseEndpoint(svc StringService) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(uppercaseRequest)
-		v, err := svc.Uppercase(req.S)
-		if err != nil {
-			return uppercaseResponse{v, err.Error()}, nil
-		}
-		return uppercaseResponse{v, ""}, nil
-	}
+func MakeHandler(svc Service) http.Handler {
+	uppercaseHandler := pouetkithttp.NewServer(
+		makeUppercaseEndpoint(svc),
+		decodeJsonRequest[uppercaseRequest],
+		pouetkithttp.EncodeJSONResponse,
+	)
+	countHandler := pouetkithttp.NewServer(
+		makeCountEndpoint(svc),
+		decodeJsonRequest[countRequest],
+		pouetkithttp.EncodeJSONResponse,
+	)
+
+	m := http.NewServeMux()
+	m.Handle("/uppercase", uppercaseHandler)
+	m.Handle("/count", countHandler)
+
+	return m
 }
 
-func makeCountEndpoint(svc StringService) endpoint.Endpoint {
-	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(countRequest)
-		v := svc.Count(req.S)
-		return countResponse{v}, nil
-	}
-}
-
-func decodeUppercaseRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request uppercaseRequest
+func decodeJsonRequest[T interface{}](_ context.Context, r *http.Request) (interface{}, error) {
+	var request T
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
+
 	return request, nil
-}
-
-func decodeCountRequest(_ context.Context, r *http.Request) (interface{}, error) {
-	var request countRequest
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		return nil, err
-	}
-	return request, nil
-}
-
-func encodeResponse(_ context.Context, w http.ResponseWriter, response interface{}) error {
-	return json.NewEncoder(w).Encode(response)
-}
-
-type uppercaseRequest struct {
-	S string `json:"s"`
-}
-
-type uppercaseResponse struct {
-	V   string `json:"v,omitempty"`
-	Err string `json:"err,omitempty"`
-}
-
-type countRequest struct {
-	S string `json:"s"`
-}
-
-type countResponse struct {
-	V int `json:"v"`
 }

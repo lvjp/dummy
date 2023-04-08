@@ -60,17 +60,15 @@ func newServer() *http.Server {
 	mux := http.NewServeMux()
 
 	{
-		svc := stringsvc.NewStringService()
-		svc = stringsvc.LoggingMiddleware(slog.Default())(svc)
-
-		mux.Handle("/string/uppercase", stringsvc.NewUppercaseHandler(svc))
-		mux.Handle("/string/count", stringsvc.NewCountHandler(svc))
+		svc := stringsvc.NewService()
+		svc = stringsvc.NewLoggingService(slog.Default(), svc)
+		mux.Handle("/string/", http.StripPrefix("/string", stringsvc.MakeHandler(svc)))
 	}
 
 	{
-		svc := versionsvc.NewVersionService()
-		svc = versionsvc.LoggingMiddleware(slog.Default())(svc)
-		mux.Handle("/version", versionsvc.NewVersionHandler(svc))
+		svc := versionsvc.NewService()
+		svc = versionsvc.NewLoggingservice(slog.Default(), svc)
+		mux.Handle("/version/", http.StripPrefix("/version", versionsvc.MakeHandler(svc)))
 	}
 
 	// PORT is definied by Scaleway serverless containers

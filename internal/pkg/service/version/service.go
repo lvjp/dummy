@@ -2,20 +2,16 @@ package version
 
 var Version = "<dev>"
 
-// ServiceMiddleware is a chainable behavior modifier for VersionService.
-type ServiceMiddleware func(VersionService) VersionService
-
-// VersionService provides operations on strings.
-type VersionService interface {
+type Service interface {
 	Version() string
 }
 
-func NewVersionService() VersionService {
-	return versionService{}
+func NewService() Service {
+	return serviceImpl{}
 }
 
-type versionService struct{}
+type serviceImpl struct{}
 
-func (versionService) Version() string {
+func (serviceImpl) Version() string {
 	return Version
 }

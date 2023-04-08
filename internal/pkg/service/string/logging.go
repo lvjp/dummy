@@ -6,15 +6,13 @@ import (
 	"golang.org/x/exp/slog"
 )
 
-func LoggingMiddleware(logger *slog.Logger) ServiceMiddleware {
-	return func(next StringService) StringService {
-		return loggingMiddleware{logger, next}
-	}
-}
-
 type loggingMiddleware struct {
 	logger *slog.Logger
-	StringService
+	svc    Service
+}
+
+func NewLoggingService(logger *slog.Logger, s Service) Service {
+	return &loggingMiddleware{logger, s}
 }
 
 func (lm loggingMiddleware) Uppercase(s string) (output string, err error) {
@@ -28,8 +26,7 @@ func (lm loggingMiddleware) Uppercase(s string) (output string, err error) {
 		)
 	}(time.Now())
 
-	output, err = lm.StringService.Uppercase(s)
-	return
+	return lm.svc.Uppercase(s)
 }
 
 func (lm loggingMiddleware) Count(s string) (n int) {
@@ -42,6 +39,5 @@ func (lm loggingMiddleware) Count(s string) (n int) {
 		)
 	}(time.Now())
 
-	n = lm.StringService.Count(s)
-	return
+	return lm.svc.Count(s)
 }
