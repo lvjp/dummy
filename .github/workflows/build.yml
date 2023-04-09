@@ -47,7 +47,6 @@ jobs:
         with:
           path: "~/.cache/bazel"
           key: bazel-build
-      - run: ./build/bazel/status.sh
       - run: |
           bazel build //...
           bazel build //:image.tar
