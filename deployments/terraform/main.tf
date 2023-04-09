@@ -8,8 +8,6 @@ resource "scaleway_cockpit_grafana_user" "dummy" {
 
 resource "scaleway_container_namespace" "dummy" {
   name = "dummy"
-
-  destroy_registry = true
 }
 
 resource "scaleway_container" "dummy" {
