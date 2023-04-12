@@ -30,7 +30,7 @@ jobs:
   lint-super-linter:
     runs-on: ubuntu-22.04
     steps:
-      - uses: github/super-linter/slim@v4.10.1
+      - uses: github/super-linter/slim@v4.10.2
         env:
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
