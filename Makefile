@@ -39,6 +39,6 @@ super-linter:
 		--env DEFAULT_WORKSPACE=/work \
 		--env RUN_LOCAL=true \
 		--env VALIDATE_GO=false \
-		github/super-linter:slim-v4.10.1 bash
+		github/super-linter:slim-v5.0.0 bash
 
 .PHONY: all build golangci-lint lint pipeline super-linter
