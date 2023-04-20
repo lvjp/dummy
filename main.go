@@ -61,50 +61,9 @@ func main() {
 
 func newServer() *http.Server {
 	mux := http.NewServeMux()
-	fieldKeys := []string{"method"}
 
-	{
-		svc := stringsvc.NewService()
-		svc = stringsvc.NewLoggingService(slog.Default().With("service", "string"), svc)
-		svc = stringsvc.NewInstrumentingService(
-			kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
-				Namespace: "api",
-				Subsystem: "string_service",
-				Name:      "request_count",
-				Help:      "Number of requests received.",
-			}, fieldKeys),
-			kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
-				Namespace: "api",
-				Subsystem: "string_service",
-				Name:      "request_latency_microseconds",
-				Help:      "Total duration of requests in microseconds.",
-			}, fieldKeys),
-			svc,
-		)
-		mux.Handle("/string/", http.StripPrefix("/string", stringsvc.MakeHandler(svc)))
-	}
-
-	{
-		svc := debugsvc.NewService()
-		svc = debugsvc.NewLoggingservice(slog.Default().With("service", "debug"), svc)
-		svc = debugsvc.NewInstrumentingService(
-			kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
-				Namespace: "api",
-				Subsystem: "debug_service",
-				Name:      "request_count",
-				Help:      "Number of requests received.",
-			}, fieldKeys),
-			kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
-				Namespace: "api",
-				Subsystem: "debug_service",
-				Name:      "request_latency_microseconds",
-				Help:      "Total duration of requests in microseconds.",
-			}, fieldKeys),
-			svc,
-		)
-		mux.Handle("/debug/", http.StripPrefix("/debug", debugsvc.MakeHandler(svc)))
-	}
-
+	mux.Handle("/string/", http.StripPrefix("/string", initStringService()))
+	mux.Handle("/debug/", http.StripPrefix("/debug", initDebugService()))
 	mux.Handle("/metrics", promhttp.Handler())
 
 	// PORT is definied by Scaleway serverless containers
@@ -119,4 +78,48 @@ func newServer() *http.Server {
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
+}
+
+func initStringService() http.Handler {
+	fieldKeys := []string{"method"}
+	svc := stringsvc.NewService()
+	svc = stringsvc.NewLoggingService(slog.Default().With("service", "string"), svc)
+	svc = stringsvc.NewInstrumentingService(
+		kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
+			Namespace: "api",
+			Subsystem: "string_service",
+			Name:      "request_count",
+			Help:      "Number of requests received.",
+		}, fieldKeys),
+		kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+			Namespace: "api",
+			Subsystem: "string_service",
+			Name:      "request_latency_microseconds",
+			Help:      "Total duration of requests in microseconds.",
+		}, fieldKeys),
+		svc,
+	)
+	return stringsvc.MakeHandler(svc)
+}
+
+func initDebugService() http.Handler {
+	fieldKeys := []string{"method"}
+	svc := debugsvc.NewService()
+	svc = debugsvc.NewLoggingservice(slog.Default().With("service", "debug"), svc)
+	svc = debugsvc.NewInstrumentingService(
+		kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
+			Namespace: "api",
+			Subsystem: "debug_service",
+			Name:      "request_count",
+			Help:      "Number of requests received.",
+		}, fieldKeys),
+		kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+			Namespace: "api",
+			Subsystem: "debug_service",
+			Name:      "request_latency_microseconds",
+			Help:      "Total duration of requests in microseconds.",
+		}, fieldKeys),
+		svc,
+	)
+	return debugsvc.MakeHandler(svc)
 }
