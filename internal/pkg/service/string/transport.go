@@ -5,19 +5,19 @@ import (
 	"encoding/json"
 	"net/http"
 
-	pouetkithttp "github.com/go-kit/kit/transport/http"
+	kithttp "github.com/go-kit/kit/transport/http"
 )
 
 func MakeHandler(svc Service) http.Handler {
-	uppercaseHandler := pouetkithttp.NewServer(
+	uppercaseHandler := kithttp.NewServer(
 		makeUppercaseEndpoint(svc),
 		decodeJsonRequest[uppercaseRequest],
-		pouetkithttp.EncodeJSONResponse,
+		kithttp.EncodeJSONResponse,
 	)
-	countHandler := pouetkithttp.NewServer(
+	countHandler := kithttp.NewServer(
 		makeCountEndpoint(svc),
 		decodeJsonRequest[countRequest],
-		pouetkithttp.EncodeJSONResponse,
+		kithttp.EncodeJSONResponse,
 	)
 
 	m := http.NewServeMux()
