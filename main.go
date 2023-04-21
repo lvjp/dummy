@@ -10,10 +10,10 @@ import (
 	"syscall"
 	"time"
 
-	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
 	debugsvc "github.com/lvjp/dummy/internal/pkg/service/debug"
 	stringsvc "github.com/lvjp/dummy/internal/pkg/service/string"
-	stdprometheus "github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sourcegraph/conc/pool"
 	"golang.org/x/exp/slog"
@@ -82,16 +82,17 @@ func newServer() *http.Server {
 
 func initStringService() http.Handler {
 	fieldKeys := []string{"method"}
+
 	svc := stringsvc.NewService()
 	svc = stringsvc.NewLoggingService(slog.Default().With("service", "string"), svc)
 	svc = stringsvc.NewInstrumentingService(
-		kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
+		promauto.NewCounterVec(prometheus.CounterOpts{
 			Namespace: "api",
 			Subsystem: "string_service",
 			Name:      "request_count",
 			Help:      "Number of requests received.",
 		}, fieldKeys),
-		kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+		promauto.NewHistogramVec(prometheus.HistogramOpts{
 			Namespace: "api",
 			Subsystem: "string_service",
 			Name:      "request_latency_microseconds",
@@ -107,13 +108,13 @@ func initDebugService() http.Handler {
 	svc := debugsvc.NewService()
 	svc = debugsvc.NewLoggingservice(slog.Default().With("service", "debug"), svc)
 	svc = debugsvc.NewInstrumentingService(
-		kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
+		promauto.NewCounterVec(prometheus.CounterOpts{
 			Namespace: "api",
 			Subsystem: "debug_service",
 			Name:      "request_count",
 			Help:      "Number of requests received.",
 		}, fieldKeys),
-		kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
+		promauto.NewHistogramVec(prometheus.HistogramOpts{
 			Namespace: "api",
 			Subsystem: "debug_service",
 			Name:      "request_latency_microseconds",

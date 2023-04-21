@@ -3,16 +3,19 @@ package string
 import (
 	"time"
 
-	"github.com/go-kit/kit/metrics"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
+var promUppercaseLabels = prometheus.Labels{"method": "uppercase"}
+var promCountLabels = prometheus.Labels{"method": "count"}
+
 type instrumentingService struct {
-	requestCount   metrics.Counter
-	requestLatency metrics.Histogram
+	requestCount   *prometheus.CounterVec
+	requestLatency *prometheus.HistogramVec
 	svc            Service
 }
 
-func NewInstrumentingService(counter metrics.Counter, latency metrics.Histogram, s Service) Service {
+func NewInstrumentingService(counter *prometheus.CounterVec, latency *prometheus.HistogramVec, s Service) Service {
 	return &instrumentingService{
 		requestCount:   counter,
 		requestLatency: latency,
@@ -22,8 +25,8 @@ func NewInstrumentingService(counter metrics.Counter, latency metrics.Histogram,
 
 func (is *instrumentingService) Uppercase(s string) (string, error) {
 	defer func(begin time.Time) {
-		is.requestCount.With("method", "uppercase").Add(1)
-		is.requestLatency.With("method", "uppercase").Observe(time.Since(begin).Seconds())
+		is.requestCount.With(promUppercaseLabels).Add(1)
+		is.requestLatency.With(promUppercaseLabels).Observe(time.Since(begin).Seconds())
 	}(time.Now())
 
 	return is.svc.Uppercase(s)
@@ -31,8 +34,8 @@ func (is *instrumentingService) Uppercase(s string) (string, error) {
 
 func (is *instrumentingService) Count(s string) int {
 	defer func(begin time.Time) {
-		is.requestCount.With("method", "count").Add(1)
-		is.requestLatency.With("method", "count").Observe(time.Since(begin).Seconds())
+		is.requestCount.With(promCountLabels).Add(1)
+		is.requestLatency.With(promCountLabels).Observe(time.Since(begin).Seconds())
 	}(time.Now())
 
 	return is.svc.Count(s)

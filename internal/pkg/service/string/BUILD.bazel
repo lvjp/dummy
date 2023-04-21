@@ -13,8 +13,8 @@ go_library(
     visibility = ["//:__subpackages__"],
     deps = [
         "@com_github_go_kit_kit//endpoint",
-        "@com_github_go_kit_kit//metrics",
         "@com_github_go_kit_kit//transport/http",
+        "@com_github_prometheus_client_golang//prometheus",
         "@org_golang_x_exp//slog",
     ],
 )
