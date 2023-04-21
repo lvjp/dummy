@@ -3,37 +3,27 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "io_bazel_rules_go",
     sha256 = "6b65cb7917b4d1709f9410ffe00ecf3e160edf674b78c54a894471320862184f",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/rules_go/releases/download/v0.39.0/rules_go-v0.39.0.zip",
-        "https://github.com/bazelbuild/rules_go/releases/download/v0.39.0/rules_go-v0.39.0.zip",
-    ],
+    urls = ["https://github.com/bazelbuild/rules_go/releases/download/v0.39.0/rules_go-v0.39.0.zip"],
 )
 
 http_archive(
     name = "bazel_gazelle",
     sha256 = "727f3e4edd96ea20c29e8c2ca9e8d2af724d8c7778e7923a854b2c80952bc405",
-    urls = [
-        "https://mirror.bazel.build/github.com/bazelbuild/bazel-gazelle/releases/download/v0.30.0/bazel-gazelle-v0.30.0.tar.gz",
-        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.30.0/bazel-gazelle-v0.30.0.tar.gz",
-    ],
+    urls = ["https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.30.0/bazel-gazelle-v0.30.0.tar.gz"],
 )
 
 http_archive(
     name = "com_github_bazelbuild_buildtools",
     sha256 = "a75c337f4d046e560298f52ae95add73b9b933e4d6fb01ed86d57313e53b68e6",
     strip_prefix = "buildtools-6.1.0",
-    urls = [
-        "https://github.com/bazelbuild/buildtools/archive/refs/tags/6.1.0.tar.gz",
-    ],
+    urls = ["https://github.com/bazelbuild/buildtools/archive/refs/tags/6.1.0.tar.gz"],
 )
 
 http_archive(
     name = "com_google_protobuf",
     sha256 = "22fdaf641b31655d4b2297f9981fa5203b2866f8332d3c6333f6b0107bb320de",
     strip_prefix = "protobuf-21.12",
-    urls = [
-        "https://github.com/protocolbuffers/protobuf/archive/v21.12.tar.gz",
-    ],
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/v21.12.tar.gz"],
 )
 
 http_archive(
