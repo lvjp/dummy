@@ -21,9 +21,9 @@ http_archive(
 
 http_archive(
     name = "com_google_protobuf",
-    sha256 = "22fdaf641b31655d4b2297f9981fa5203b2866f8332d3c6333f6b0107bb320de",
-    strip_prefix = "protobuf-21.12",
-    urls = ["https://github.com/protocolbuffers/protobuf/archive/v21.12.tar.gz"],
+    sha256 = "786bf22c8fd3f20b7242df3b9649900714b0ba77b24a4971573088f41dfe9f8a",
+    strip_prefix = "protobuf-22.3",
+    urls = ["https://github.com/protocolbuffers/protobuf/archive/v22.3.tar.gz"],
 )
 
 http_archive(
