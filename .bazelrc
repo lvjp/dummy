@@ -5,3 +5,6 @@ test --test_output=errors
 # Enable stamping
 build --stamp --workspace_status_command=./build/bazel/status.sh
 run --stamp --workspace_status_command=./build/bazel/status.sh
+
+
+build --cxxopt='-std=c++14'
