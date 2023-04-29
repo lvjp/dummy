@@ -30,8 +30,8 @@ go_library(
         "@com_github_prometheus_client_golang//prometheus",
         "@com_github_prometheus_client_golang//prometheus/promauto",
         "@com_github_prometheus_client_golang//prometheus/promhttp",
+        "@com_github_rs_zerolog//:zerolog",
         "@com_github_sourcegraph_conc//pool",
-        "@org_golang_x_exp//slog",
     ],
 )
 

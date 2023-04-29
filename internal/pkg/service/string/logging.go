@@ -3,27 +3,27 @@ package string
 import (
 	"time"
 
-	"golang.org/x/exp/slog"
+	"github.com/rs/zerolog"
 )
 
 type loggingMiddleware struct {
-	logger *slog.Logger
+	logger zerolog.Logger
 	svc    Service
 }
 
-func NewLoggingService(logger *slog.Logger, s Service) Service {
+func NewLoggingService(logger zerolog.Logger, s Service) Service {
 	return &loggingMiddleware{logger, s}
 }
 
 func (lm loggingMiddleware) Uppercase(s string) (output string, err error) {
 	defer func(begin time.Time) {
-		lm.logger.Info("Request processed",
-			"method", "uppercase",
-			"input", s,
-			"output", output,
-			"err", err,
-			"took", time.Since(begin),
-		)
+		lm.logger.Info().
+			Str("method", "uppercase").
+			Str("input", s).
+			Str("output", output).
+			Err(err).
+			Dur("took", time.Since(begin)).
+			Msg("Request processed")
 	}(time.Now())
 
 	return lm.svc.Uppercase(s)
@@ -31,12 +31,12 @@ func (lm loggingMiddleware) Uppercase(s string) (output string, err error) {
 
 func (lm loggingMiddleware) Count(s string) (n int) {
 	defer func(begin time.Time) {
-		lm.logger.Info("Request processed",
-			"method", "count",
-			"input", s,
-			"n", n,
-			"took", time.Since(begin),
-		)
+		lm.logger.Info().
+			Str("method", "count").
+			Str("input", s).
+			Int("n", n).
+			Dur("took", time.Since(begin)).
+			Msg("Request processed")
 	}(time.Now())
 
 	return lm.svc.Count(s)

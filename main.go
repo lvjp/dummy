@@ -15,17 +15,25 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/rs/zerolog"
 	"github.com/sourcegraph/conc/pool"
-	"golang.org/x/exp/slog"
 )
 
 func main() {
-	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout)))
+	logger := zerolog.New(os.Stdout)
+
+	// Check for local debugging
+	if os.Getenv("SCW_APPLICATION_NAME") == "" {
+		logger = zerolog.New(zerolog.ConsoleWriter{
+			Out:        os.Stderr,
+			TimeFormat: time.RFC3339,
+		})
+	}
 
 	mainCtx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	s := newServer()
+	s := newServer(logger)
 
 	p := pool.New().WithErrors().WithContext(mainCtx)
 	p.Go(func(ctx context.Context) error {
@@ -33,37 +41,37 @@ func main() {
 			return ctx
 		}
 
-		slog.With("addr", s.Addr).Info("Start HTTP server")
+		logger.Info().Str("addr", s.Addr).Msg("Start HTTP server")
 
 		if err := s.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			slog.Error("Cannot server listen and serve", err)
+			logger.Error().Err(err).Msg("Cannot server listen and serve")
 			return err
 		}
 
-		slog.Info("HTTP server gracefully shutdown")
+		logger.Info().Msg("HTTP server gracefully shutdown")
 		return nil
 	})
 
 	p.Go(func(ctx context.Context) error {
 		<-ctx.Done()
 
-		slog.Info("Shutdown sequence started")
+		logger.Info().Msg("Shutdown sequence started")
 		return s.Shutdown(context.Background())
 	})
 
 	if err := p.Wait(); err != nil {
-		slog.Error("Unexpected error on shutdown", err)
+		logger.Error().Err(err).Msg("Unexpected error on shutdown")
 		return
 	}
 
-	slog.Info("Shutdown sequence finished")
+	logger.Info().Msg("Shutdown sequence finished")
 }
 
-func newServer() *http.Server {
+func newServer(logger zerolog.Logger) *http.Server {
 	mux := http.NewServeMux()
 
-	mux.Handle("/string/", http.StripPrefix("/string", initStringService()))
-	mux.Handle("/debug/", http.StripPrefix("/debug", initDebugService()))
+	mux.Handle("/string/", http.StripPrefix("/string", initStringService(logger)))
+	mux.Handle("/debug/", http.StripPrefix("/debug", initDebugService(logger)))
 	mux.Handle("/metrics", promhttp.Handler())
 
 	// PORT is definied by Scaleway serverless containers
@@ -80,11 +88,11 @@ func newServer() *http.Server {
 	}
 }
 
-func initStringService() http.Handler {
+func initStringService(logger zerolog.Logger) http.Handler {
 	fieldKeys := []string{"method"}
 
 	svc := stringsvc.NewService()
-	svc = stringsvc.NewLoggingService(slog.Default().With("service", "string"), svc)
+	svc = stringsvc.NewLoggingService(logger.With().Str("service", "string").Logger(), svc)
 	svc = stringsvc.NewInstrumentingService(
 		promauto.NewCounterVec(prometheus.CounterOpts{
 			Namespace: "api",
@@ -103,10 +111,10 @@ func initStringService() http.Handler {
 	return stringsvc.MakeHandler(svc)
 }
 
-func initDebugService() http.Handler {
+func initDebugService(logger zerolog.Logger) http.Handler {
 	fieldKeys := []string{"method"}
 	svc := debugsvc.NewService()
-	svc = debugsvc.NewLoggingservice(slog.Default().With("service", "debug"), svc)
+	svc = debugsvc.NewLoggingservice(logger.With().Str("service", "string").Logger(), svc)
 	svc = debugsvc.NewInstrumentingService(
 		promauto.NewCounterVec(prometheus.CounterOpts{
 			Namespace: "api",

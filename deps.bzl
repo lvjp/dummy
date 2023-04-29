@@ -94,8 +94,8 @@ def go_dependencies():
     go_repository(
         name = "com_github_coreos_go_systemd_v22",
         importpath = "github.com/coreos/go-systemd/v22",
-        sum = "h1:D9/bQk5vlXQFZ6Kwuu6zaiXJ9oTPe68++AzAJc1DzSI=",
-        version = "v22.3.2",
+        sum = "h1:RrqgGjYQKalulkV8NGVIfkXQf6YYmOyiJKk8iXXhfZs=",
+        version = "v22.5.0",
     )
 
     go_repository(
@@ -149,6 +149,13 @@ def go_dependencies():
         sum = "h1:4mx0EYENAdX/B/rbunjlt5+4RTA/a9SMHBRuSKdGxPM=",
         version = "v1.0.2",
     )
+    go_repository(
+        name = "com_github_godbus_dbus_v5",
+        importpath = "github.com/godbus/dbus/v5",
+        sum = "h1:9349emZab16e7zQvpmsbtjc18ykshndd8y2PG3sgJbA=",
+        version = "v5.0.4",
+    )
+
     go_repository(
         name = "com_github_gogo_protobuf",
         importpath = "github.com/gogo/protobuf",
@@ -294,14 +301,14 @@ def go_dependencies():
     go_repository(
         name = "com_github_mattn_go_colorable",
         importpath = "github.com/mattn/go-colorable",
-        sum = "h1:c1ghPdyEDarC70ftn0y+A/Ee++9zz8ljHG1b13eJ0s8=",
-        version = "v0.1.8",
+        sum = "h1:fFA4WZxdEF4tXPZVKMLwD8oUnCTTo08duU7wxecdEvA=",
+        version = "v0.1.13",
     )
     go_repository(
         name = "com_github_mattn_go_isatty",
         importpath = "github.com/mattn/go-isatty",
-        sum = "h1:yVuAays6BHfxijgZPzw+3Zlu5yQgKGP2/hcQbHb7S9Y=",
-        version = "v0.0.14",
+        sum = "h1:DOKFKCQ7FNG2L1rbrmstDN4QVRdS89Nkh85u68Uwp98=",
+        version = "v0.0.18",
     )
     go_repository(
         name = "com_github_matttproud_golang_protobuf_extensions",
@@ -450,6 +457,19 @@ def go_dependencies():
         sum = "h1:73kH8U+JUqXU8lRuOHeVHaa/SZPifC7BkcraZVejAe8=",
         version = "v1.9.0",
     )
+    go_repository(
+        name = "com_github_rs_xid",
+        importpath = "github.com/rs/xid",
+        sum = "h1:qd7wPTDkN6KQx2VmMBLrpHkiyQwgFXRnkOLacUiaSNY=",
+        version = "v1.4.0",
+    )
+    go_repository(
+        name = "com_github_rs_zerolog",
+        importpath = "github.com/rs/zerolog",
+        sum = "h1:cO+d60CHkknCbvzEWxP0S9K6KqyTjrCNUy1LdQLCGPc=",
+        version = "v1.29.1",
+    )
+
     go_repository(
         name = "com_github_sirupsen_logrus",
         importpath = "github.com/sirupsen/logrus",
@@ -639,8 +659,8 @@ def go_dependencies():
     go_repository(
         name = "org_golang_x_sys",
         importpath = "golang.org/x/sys",
-        sum = "h1:MVltZSvRTcU2ljQOhs94SXPftV6DCNnZViHeQps87pQ=",
-        version = "v0.6.0",
+        sum = "h1:3jlCCIQZPdOYu1h8BkNvLz8Kgwtae2cagcG/VamtZRU=",
+        version = "v0.7.0",
     )
 
     go_repository(

@@ -19,6 +19,6 @@ go_library(
         "@com_github_go_kit_kit//endpoint",
         "@com_github_go_kit_kit//transport/http",
         "@com_github_prometheus_client_golang//prometheus",
-        "@org_golang_x_exp//slog",
+        "@com_github_rs_zerolog//:zerolog",
     ],
 )
