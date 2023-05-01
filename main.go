@@ -89,46 +89,39 @@ func newServer(logger zerolog.Logger) *http.Server {
 }
 
 func initStringService(logger zerolog.Logger) http.Handler {
-	fieldKeys := []string{"method"}
-
 	svc := stringsvc.NewService()
 	svc = stringsvc.NewLoggingService(logger.With().Str("service", "string").Logger(), svc)
-	svc = stringsvc.NewInstrumentingService(
-		promauto.NewCounterVec(prometheus.CounterOpts{
-			Namespace: "api",
-			Subsystem: "string_service",
-			Name:      "request_count",
-			Help:      "Number of requests received.",
-		}, fieldKeys),
-		promauto.NewHistogramVec(prometheus.HistogramOpts{
-			Namespace: "api",
-			Subsystem: "string_service",
-			Name:      "request_latency_microseconds",
-			Help:      "Total duration of requests in microseconds.",
-		}, fieldKeys),
-		svc,
-	)
+	svc = stringsvc.NewInstrumentingService(newPromMetrics("string", svc))
 	return stringsvc.MakeHandler(svc)
 }
 
 func initDebugService(logger zerolog.Logger) http.Handler {
-	fieldKeys := []string{"method"}
 	svc := debugsvc.NewService()
 	svc = debugsvc.NewLoggingservice(logger.With().Str("service", "string").Logger(), svc)
-	svc = debugsvc.NewInstrumentingService(
-		promauto.NewCounterVec(prometheus.CounterOpts{
+	svc = debugsvc.NewInstrumentingService(newPromMetrics("debug", svc))
+	return debugsvc.MakeHandler(svc)
+}
+
+func newPromMetrics[T any](subsystem string, svc T) (*prometheus.CounterVec, *prometheus.HistogramVec, T) {
+	fieldKeys := []string{"method"}
+	counter := promauto.NewCounterVec(
+		prometheus.CounterOpts{
 			Namespace: "api",
-			Subsystem: "debug_service",
+			Subsystem: subsystem + "_service",
 			Name:      "request_count",
 			Help:      "Number of requests received.",
-		}, fieldKeys),
-		promauto.NewHistogramVec(prometheus.HistogramOpts{
+		},
+		fieldKeys,
+	)
+	histogram := promauto.NewHistogramVec(
+		prometheus.HistogramOpts{
 			Namespace: "api",
-			Subsystem: "debug_service",
+			Subsystem: subsystem + "_service",
 			Name:      "request_latency_microseconds",
 			Help:      "Total duration of requests in microseconds.",
-		}, fieldKeys),
-		svc,
+		},
+		fieldKeys,
 	)
-	return debugsvc.MakeHandler(svc)
+
+	return counter, histogram, svc
 }
