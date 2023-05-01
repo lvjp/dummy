@@ -1,22 +1,21 @@
 package string
 
 import (
-	"context"
-	"encoding/json"
 	"net/http"
 
 	kithttp "github.com/go-kit/kit/transport/http"
+	"github.com/lvjp/dummy/pkg/gokitutils"
 )
 
 func MakeHandler(svc Service) http.Handler {
 	uppercaseHandler := kithttp.NewServer(
 		makeUppercaseEndpoint(svc),
-		decodeJsonRequest[uppercaseRequest],
+		gokitutils.DecodeJsonRequest[uppercaseRequest],
 		kithttp.EncodeJSONResponse,
 	)
 	countHandler := kithttp.NewServer(
 		makeCountEndpoint(svc),
-		decodeJsonRequest[countRequest],
+		gokitutils.DecodeJsonRequest[countRequest],
 		kithttp.EncodeJSONResponse,
 	)
 
@@ -25,13 +24,4 @@ func MakeHandler(svc Service) http.Handler {
 	m.Handle("/count", countHandler)
 
 	return m
-}
-
-func decodeJsonRequest[T interface{}](_ context.Context, r *http.Request) (interface{}, error) {
-	var request T
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		return nil, err
-	}
-
-	return request, nil
 }
