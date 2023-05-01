@@ -20,11 +20,11 @@ import (
 )
 
 func main() {
-	logger := zerolog.New(os.Stdout)
+	logger := zerolog.New(os.Stdout).With().Timestamp().Logger()
 
 	// Check for local debugging
 	if os.Getenv("SCW_APPLICATION_NAME") == "" {
-		logger = zerolog.New(zerolog.ConsoleWriter{
+		logger = logger.Output(zerolog.ConsoleWriter{
 			Out:        os.Stderr,
 			TimeFormat: time.RFC3339,
 		})

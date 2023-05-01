@@ -9,6 +9,8 @@ run: build
 		--interactive \
 		--name dummy \
 		--publish 8080:8080 \
+		--volume /etc/timezone:/etc/timezone:ro \
+		--volume /etc/localtime:/etc/localtime:ro \
 		"sha256:$(shell cat bazel-bin/image.json.sha256)"
 
 build:
