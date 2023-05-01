@@ -97,7 +97,7 @@ func initStringService(logger zerolog.Logger) http.Handler {
 
 func initDebugService(logger zerolog.Logger) http.Handler {
 	svc := debugsvc.NewService()
-	svc = debugsvc.NewLoggingservice(logger.With().Str("service", "string").Logger(), svc)
+	svc = debugsvc.NewLoggingservice(logger.With().Str("service", "debug").Logger(), svc)
 	svc = debugsvc.NewInstrumentingService(newPromMetrics("debug", svc))
 	return debugsvc.MakeHandler(svc)
 }
