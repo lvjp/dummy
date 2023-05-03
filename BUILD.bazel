@@ -26,6 +26,7 @@ go_library(
     visibility = ["//visibility:private"],
     deps = [
         "//internal/pkg/service/debug",
+        "//internal/pkg/service/fortune",
         "//internal/pkg/service/string",
         "@com_github_prometheus_client_golang//prometheus",
         "@com_github_prometheus_client_golang//prometheus/promauto",

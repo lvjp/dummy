@@ -11,6 +11,7 @@ import (
 	"time"
 
 	debugsvc "github.com/lvjp/dummy/internal/pkg/service/debug"
+	"github.com/lvjp/dummy/internal/pkg/service/fortune"
 	stringsvc "github.com/lvjp/dummy/internal/pkg/service/string"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -72,6 +73,7 @@ func newServer(logger zerolog.Logger) *http.Server {
 
 	mux.Handle("/string/", http.StripPrefix("/string", initStringService(logger)))
 	mux.Handle("/debug/", http.StripPrefix("/debug", initDebugService(logger)))
+	mux.Handle("/fortune", initFortuneSerice(logger))
 	mux.Handle("/metrics", promhttp.Handler())
 
 	// PORT is definied by Scaleway serverless containers
@@ -100,6 +102,13 @@ func initDebugService(logger zerolog.Logger) http.Handler {
 	svc = debugsvc.NewLoggingservice(logger.With().Str("service", "debug").Logger(), svc)
 	svc = debugsvc.NewInstrumentingService(newPromMetrics("debug", svc))
 	return debugsvc.MakeHandler(svc)
+}
+
+func initFortuneSerice(logger zerolog.Logger) http.Handler {
+	svc := fortune.NewService()
+	svc = fortune.NewLoggingService(logger.With().Str("service", "fortune").Logger(), svc)
+	svc = fortune.NewInstrumentingService(newPromMetrics("fortune", svc))
+	return fortune.MakeHandler(svc)
 }
 
 func newPromMetrics[T any](subsystem string, svc T) (*prometheus.CounterVec, *prometheus.HistogramVec, T) {

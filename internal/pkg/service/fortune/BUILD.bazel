@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "fortune",
+    srcs = [
+        "endpoint.go",
+        "instrumenting.go",
+        "logging.go",
+        "service.go",
+        "transport.go",
+    ],
+    importpath = "github.com/lvjp/dummy/internal/pkg/service/fortune",
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//pkg/gokitutils",
+        "@com_github_go_kit_kit//endpoint",
+        "@com_github_go_kit_kit//transport/http",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_rs_zerolog//:zerolog",
+    ],
+)
